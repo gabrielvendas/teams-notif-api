@@ -38,7 +38,7 @@ const allureNotify = async (req, res, next) => {
                                         title: "View Allure Report",
                                         style: "default",
                                         role: "Link",
-                                        url: "https://bootcampsicredivs13-quality-guardians-239b7e5768d35c73734602afa.gitlab.io/",
+                                        url: allureReportUrl,
                                         tooltip: "View on the web the tests report"
                                     }
                                 ]
