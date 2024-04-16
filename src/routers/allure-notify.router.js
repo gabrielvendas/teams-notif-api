@@ -3,6 +3,6 @@ const allureNotifyRouter = Router();
 
 const allureNotifyController = require('../controllers/allure-notify.controller');
 
-allureNotifyRouter.post('/allure-capture', allureNotifyController.allureNotify);
+allureNotifyRouter.post('/allure-notify', allureNotifyController.allureNotify);
 
 module.exports = allureNotifyRouter;
