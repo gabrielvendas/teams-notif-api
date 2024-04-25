@@ -1,37 +1,28 @@
 const puppeteer = require('puppeteer');
 
-const allureNotify = async (req, res, next) => {
+const allureNotif = async (req, res, next) => {
     try {
-        const { sonarQubeUrl, teamsSonarQubeWebhookURL } = req.body;
+        const { allureReportUrl, teamsAllureWebhookUrl } = req.body;
 
-        await page.goto(sonarQubeUrl);
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await page.goto(allureReportUrl);
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
 
         await page.setViewport({
             width: 1366,
             height: 768,
         });
 
-        await page.type('#username', 'seu-email-do-jira');
-        await page.click('#login-submit');
-
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        await page.type('#password', 'sua-senha-do-jira');
-        await page.click('#login-submit');
-
-        await new Promise(resolve => setTimeout(resolve, 30000));
-
-        const screenshotBufferSonar = await page.screenshot();
-
-        await page.screenshot({ path: 'screenshot.png' });
+        const screenshotBuffer = await page.screenshot();
 
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        const screenshotBase64Sonar = screenshotBufferSonar.toString('base64');
+        const screenshotBase64 = screenshotBuffer.toString('base64');
 
-        const cardSonarqube = {
+        const cardAllureReport = {
             type: "message",
             attachments: [
                 {
@@ -44,40 +35,40 @@ const allureNotify = async (req, res, next) => {
                                 actions: [
                                     {
                                         type: "Action.OpenUrl",
-                                        title: "View SonarQUBE Report",
+                                        title: "View Allure Report",
                                         style: "default",
                                         role: "Link",
-                                        url: sonarQubeUrl,
-                                        tooltip: "View on the web the SONARQUBE tests report"
+                                        url: allureReportUrl,
+                                        tooltip: "View on the web the tests report"
                                     }
                                 ]
                             },
                             {
                                 type: "Image",
-                                url: "data:image/png;base64," + screenshotBase64Sonar
+                                url: "data:image/png;base64," + screenshotBase64
                             }
                         ],
                         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
-                        version: "1.0"
+                        version: "1.6"
                     }
                 }
             ]
         }
 
-        await fetch(teamsSonarQubeWebhookURL, {
+        await fetch(teamsAllureWebhookUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(cardSonarqube)
+            body: JSON.stringify(cardAllureReport)
         });
 
         await browser.close();
 
-        return res.json({ message: 'Success Screenshot' });
+        return res.json({ message: 'Allure Report notification successfully sent to Teams' });
     } catch (e) {
         next(e);
     }
 }
 
-module.exports = { allureNotify }
+module.exports = { allureNotif }
