@@ -1,9 +1,6 @@
 const gitlabCiNotif = async (req, res, next) => {
     try {
-        const { avatarUrl, gitlabUsername, gitlabCiProjectPath, gitlabCiCommitBranch, gitlabCiPipelineStatus, gitlabCiPipelineUrl, teamsGitlabCiWebhookUrl } = req.body;
-
-        const status = gitlabCiPipelineStatus === 'success' || gitlabCiPipelineStatus === 'failed' ? gitlabCiPipelineStatus : 'undefined';
-        const icon = gitlabCiPipelineStatus === 'success' ? '✅' : gitlabCiPipelineStatus === 'failed' ? '❌' : ''
+        const { avatarUrl, gitlabUsername, gitlabCiProjectPath, gitlabCiCommitBranch, gitlabCiPipelineUrl, teamsGitlabCiWebhookUrl } = req.body;
 
         const cardGitlabPipeline = {
             type: "message",
@@ -48,13 +45,6 @@ const gitlabCiNotif = async (req, res, next) => {
                                                 type: "TextBlock",
                                                 spacing: "None",
                                                 text: `**Branch**: ${gitlabCiCommitBranch}`,
-                                                isSubtle: false,
-                                                wrap: true
-                                            },
-                                            {
-                                                type: "TextBlock",
-                                                spacing: "None",
-                                                text: `**Status**: ${status} ${icon}`,
                                                 isSubtle: false,
                                                 wrap: true
                                             }
